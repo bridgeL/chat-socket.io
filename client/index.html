@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        form {
+            background: #aaa;
+            padding: 3px 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form>* {
+            margin: 0 5px;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+        }
+
+        form button {
+            width: 9%;
+            background: #099;
+            border: none;
+            padding: 10px;
+        }
+
+        #m {
+            width: 70%;
+        }
+
+        #uname {
+            width: 10%;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="typing"></div>
+    <div id="room-info"></div>
+    <ul id="messages"></ul>
+    <form action="">
+        <span>UNAME</span>
+        <input id="uname" placeholder="uname" />
+        <input id="m" placeholder="message" />
+        <button>send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/client/client.js"></script>
+</body>
+
+</html>
