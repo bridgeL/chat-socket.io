@@ -1,165 +1,249 @@
-const get_cache = (name, default_value) => {
-    let value = localStorage.getItem(name);
-    return value ? value : default_value;
-};
+// const add_msg = (uname, uid, msg) => {
+//     let date = new Date().toLocaleString();
+//     let li = $("<li>")
+//         .append($("<span>").text(`[${date}] `).css("color", "green"))
+//         .append($("<span>").text(`${uname}`).css("color", "red"))
+//         .append($("<span>").text(`(${uid}) `).css("color", "blue"))
+//         .append($("<span>").text(`${msg}`));
+//     $("#messages").append(li);
+// };
 
-const add_msg = (uname, uid, msg) => {
-    let date = new Date().toLocaleString();
-    let li = $("<li>")
-        .append($("<span>").text(`[${date}] `).css("color", "green"))
-        .append($("<span>").text(`${uname}`).css("color", "red"))
-        .append($("<span>").text(`(${uid}) `).css("color", "blue"))
-        .append($("<span>").text(`${msg}`));
-    $("#messages").append(li);
-};
+// // 弹窗消息
+// const init_notice = () => {
+//     $("body").append(
+//         $("<div>").attr("id", "notice").css({
+//             textAlign: "right",
+//             backgroundColor: "#eee",
+//             margin: "2px 5px",
+//             width: "300px",
+//             position: "fixed",
+//             right: 0,
+//             top: 0,
+//             fontSize: "22px",
+//             whiteSpace: "pre",
+//         })
+//     );
 
-const show_room_info = (room) => {
-    let room_info = $("#room-info");
-    room_info.children().remove();
-    room_info.append($("<span>").text(`online ${room.users.length}: `));
-    room.users.forEach((user) => {
-        room_info.append($("<span>").text(`${user.uname}(${user.uid}) `));
-    });
-};
+//     let notice = {
+//         add: (msg) => {
+//             const chars =
+//                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+//             let id = Array(8)
+//                 .fill()
+//                 .map(() => chars[Math.floor(Math.random() * chars.length)])
+//                 .join("");
+
+//             $("#notice").append($("<div>").text(msg).attr("id", id));
+//             setTimeout(() => {
+//                 $("#" + id).remove();
+//             }, 3000);
+//         },
+//     };
+
+//     return notice;
+// };
+
+// // 从本地加载用户信息
+// const init_user = () => {
+//     let uid = localStorage.getItem("uid");
+//     let uname = localStorage.getItem("uname");
+//     if (uname) $("#uname").val(uname);
+
+//     let user = {
+//         uid: uid,
+//         uname: uname ? uname : "",
+//     };
+//     return user;
+// };
+
+// // 初始化room
+// const init_room = () => {
+//     let room = {
+//         users: [],
+//         update: () => {
+//             let div = $("#room");
+//             div.children().remove();
+//             div.append($("<span>").text(`online ${room.users.length}: `));
+//             room.users.forEach((user) => {
+//                 div.append($("<span>").text(`${user.uname}(${user.uid}) `));
+//             });
+//         },
+//         join: (user) => {
+//             let u = room.users.find((u) => u.uid == user.uid);
+//             if (u) {
+//             u.uname = user.uname;
+//                 return false;
+//             }
+//             room.users.push(user);
+//             return true;
+//         },
+//         leave: (user) => {
+//             let i = room.users.findIndex((u) => u.uid == user.uid);
+//             if (i < 0) return false;
+//             room.users.splice(i, 1);
+//             return true;
+//         },
+//     };
+//     return room;
+// };
 
 $(() => {
-    var socket = io();
-
     // 初始化
-    var user = {
-        uid: get_cache("uid", ""),
-        uname: get_cache("uname", ""),
-    };
-    $("#uname").val(user.uname);
-    console.log(user);
+    let socket = io();
+    // let notice = init_notice();
+    // let user = init_user();
+    // let room = init_room();
 
-    var room;
+    // console.log(user);
 
-    // 注册uid
-    socket.emit("init", user.uid, user.uname, (res) => {
-        user.uid = res;
-        localStorage.setItem("uid", user.uid);
+    // 登录
+    let user = localStorage.getItem("user");
+    let uid = user?.uid;
+    socket.emit("login", uid);
+
+    // 登录成功
+    socket.on("login", (user) => {
         console.log(user);
+        localStorage.setItem("user", user);
     });
 
-    // 改名
-    $("#uname").blur(() => {
-        let uname = $("#uname").val();
-        if (user.uname == uname) return;
-        user.uname = uname;
-        localStorage.setItem("uname", uname);
-        socket.emit("change uname", uname);
-    });
+    // // 获取房间信息
+    // socket.on("s-room-first", (_room) => {
+    //     room.users = _room.users;
+    //     room.update();
+    //     console.log(room);
+    // });
 
-    // 从其他会话导致的改名
-    socket.on("change uname", (_user) => {
-        if (_user.uid == user.uid) {
-            user.uname = uname;
-            $("#uname").val(uname);
-            localStorage.setItem("uname", uname);
-        }
-        let u = room.users.find((_) => _.uid == _user.uid);
-        console.log(u);
-        if (u) {
-            u.uname = _user.uname;
-            console.log(u);
-            show_room_info(room);
-        }
-    });
+    // // 其他人加入房间
+    // socket.on("s-room-join", (user) => {
+    //     room.join(user);
+    //     console.log(user);
+    //     let msg = `${user.uname}(${user.uid})    join`;
+    //     notice.add(msg);
+    // });
 
-    // 获取房间信息
-    socket.on("room info", (_room) => {
-        room = _room;
-        console.log(room);
-        show_room_info(room);
-    });
+    // // 改名
+    // $("#uname").blur(() => {
+    //     let uname = $("#uname").val();
+    //     if (user.uname == uname) return;
 
-    // 房间有人加入
-    socket.on("room join", (user) => {
-        room.users.push(user);
-        console.log(user, "join");
-        show_room_info(room);
-    });
+    //     user.uname = uname;
+    //     localStorage.setItem("uname", uname);
+    //     socket.emit("c-name-change", uname);
+    // });
 
-    // 房间有人离开
-    socket.on("room leave", (user) => {
-        let i = room.users.findIndex((_) => _.uid == user.uid);
-        if (i > -1) {
-            room.users.splice(i, 1);
-        }
+    // // 从其他会话导致的改名
+    // socket.on("s-name-change", (_user) => {
+    //     let uid = _user.uid;
+    //     let uname = _user.uname;
 
-        console.log(room);
-        console.log(user, "leave");
-        show_room_info(room);
-    });
+    //     if (user.uid == uid) {
+    //         user.uname = uname;
+    //         $("#uname").val(uname);
+    //         localStorage.setItem("uname", uname);
+    //         room.update();
+    //     } else {
+    //         let u = room.users.find((u) => u.uid == uid);
+    //         if (!u) return;
+    //         u.uname = uname;
+    //         room.update();
+    //     }
+    // });
 
-    // 正在输入
-    const emit_input_event_p = () => {
-        let last = false;
-        const func = () => {
-            if (!last) {
-                console.log("input!");
-                socket.emit("typing");
-                last = true;
-                setTimeout(() => {
-                    last = false;
-                }, 5000);
-            }
-        };
-        return func;
-    };
+    // // 获取房间信息
+    // socket.on("room info", (_room) => {
+    //     room = _room;
+    //     console.log(room);
+    //     show_room_info(room);
+    // });
 
-    let emit_input_event = emit_input_event_p();
-    $("#m").on("input", () => {
-        emit_input_event();
-    });
-    $("#m").on("focus", () => {
-        emit_input_event();
-    });
+    // // 房间有人加入
+    // socket.on("room join", (user) => {
+    //     room.users.push(user);
+    //     console.log(user, "join");
+    //     show_room_info(room);
+    // });
 
-    // 监听其他人正在输入
-    let typing_list = [];
-    const show_typing_info = () => {
-        let typing_info = $("#typing");
-        typing_info.children().remove();
-        // if (typing_list.length == 0) return;
-        typing_list.forEach((user) => {
-            typing_info.append(
-                $("<div>").text(`${user.uname}(${user.uid}) is typing`)
-            );
-        });
-    };
+    // // 房间有人离开
+    // socket.on("room leave", (user) => {
+    //     let i = room.users.findIndex((_) => _.uid == user.uid);
+    //     if (i > -1) {
+    //         room.users.splice(i, 1);
+    //     }
 
-    socket.on("typing", (user) => {
-        if (typing_list.find((_) => _.uid == user.uid)) return;
+    //     console.log(room);
+    //     console.log(user, "leave");
+    //     show_room_info(room);
+    // });
 
-        typing_list.push(user);
-        show_typing_info();
+    // // 正在输入
+    // const emit_input_event_p = () => {
+    //     let last = false;
+    //     const func = () => {
+    //         if (!last) {
+    //             console.log("input!");
+    //             socket.emit("typing");
+    //             last = true;
+    //             setTimeout(() => {
+    //                 last = false;
+    //             }, 5000);
+    //         }
+    //     };
+    //     return func;
+    // };
 
-        setTimeout(() => {
-            let i = typing_list.findIndex((_) => _.uid == user.uid);
-            if (i > -1) typing_list.splice(i, 1);
-            show_typing_info();
-        }, 3000);
-    });
+    // let emit_input_event = emit_input_event_p();
+    // $("#m").on("input", () => {
+    //     emit_input_event();
+    // });
+    // $("#m").on("focus", () => {
+    //     emit_input_event();
+    // });
 
-    // 发消息
-    $("form").submit((e) => {
-        e.preventDefault(); // prevents page reloading
+    // // 监听其他人正在输入
+    // let typing_list = [];
+    // const show_typing_info = () => {
+    //     let typing_info = $("#typing");
+    //     typing_info.children().remove();
+    //     // if (typing_list.length == 0) return;
+    //     typing_list.forEach((user) => {
+    //         typing_info.append(
+    //             $("<div>").text(`${user.uname}(${user.uid}) is typing`)
+    //         );
+    //     });
+    // };
 
-        let msg = $("#m").val();
-        if (!msg) return;
+    // socket.on("typing", (user) => {
+    //     if (typing_list.find((_) => _.uid == user.uid)) return;
 
-        $("#m").val("");
+    //     typing_list.push(user);
+    //     show_typing_info();
 
-        socket.emit("chat", msg);
-        add_msg(user.uname, user.uid, msg);
+    //     setTimeout(() => {
+    //         let i = typing_list.findIndex((_) => _.uid == user.uid);
+    //         if (i > -1) typing_list.splice(i, 1);
+    //         show_typing_info();
+    //     }, 3000);
+    // });
 
-        return false;
-    });
+    // // 发消息
+    // $("form").submit((e) => {
+    //     e.preventDefault(); // prevents page reloading
 
-    // 显示其他人的消息
-    socket.on("chat", (uname, uid, msg) => {
-        add_msg(uname, uid, msg);
-    });
+    //     let msg = $("#m").val();
+    //     if (!msg) return;
+
+    //     $("#m").val("");
+
+    //     socket.emit("chat", msg);
+    //     add_msg(user.uname, user.uid, msg);
+
+    //     return false;
+    // });
+
+    // // 显示其他人的消息
+    // socket.on("chat", (uname, uid, msg) => {
+    //     add_msg(uname, uid, msg);
+    // });
 });
