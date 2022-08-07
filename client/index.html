@@ -1,81 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+    <head>
+        <title>Socket.IO chat</title>
+        <style>
+            body {
+                font: 20px consolas, Arial;
+            }
 
-<head>
-    <title>Socket.IO chat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+            form {
+                background: #eee;
+                height: 50px;
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+            }
 
-        body {
-            font: 13px Helvetica, Arial;
-        }
+            #uname {
+                width: 10%;
+            }
 
-        form {
-            background: #aaa;
-            padding: 3px 20px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+            #m {
+                width: 50%;
+            }
 
-        form>* {
-            margin: 0 5px;
-        }
+            form input {
+                border: 0;
+                padding: 10px;
+            }
 
-        form input {
-            border: 0;
-            padding: 10px;
-        }
+            form button {
+                background: #099;
+                padding: 10px;
+            }
 
-        form button {
-            width: 9%;
-            background: #099;
-            border: none;
-            padding: 10px;
-        }
+            #chat {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
 
-        #m {
-            width: 70%;
-        }
+            #chat li {
+                padding: 5px 10px;
+            }
 
-        #uname {
-            width: 10%;
-        }
+            #chat li:nth-child(odd) {
+                background: #eee;
+            }
+        </style>
+    </head>
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
+    <body>
+        <div
+            style="
+                position: absolute;
+                top: 10%;
+                left: 50%;
+                width: 600px;
+                transform: translateX(-50%);
+                border: 1px solid black;
+                border-radius: 20px;
+                overflow: auto;
+            "
+        >
+            <div style="margin: 10px">
+                <div id="room"></div>
+                <ul id="chat" style="height: 400px; overflow: auto"></ul>
+            </div>
 
-        #messages li {
-            padding: 5px 10px;
-        }
+            <form action="">
+                <input id="uname" placeholder="uname" />
+                <input id="m" placeholder="message" />
+                <button>send</button>
+            </form>
+        </div>
 
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
-    </style>
-
-</head>
-
-<body>
-    <div id="room"></div>
-    <ul id="messages"></ul>
-    <form action="">
-        <span>UNAME</span>
-        <input id="uname" placeholder="uname" />
-        <input id="m" placeholder="message" />
-        <button>send</button>
-    </form>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="/client/client.js"></script>
-</body>
-
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="/client/client.js"></script>
+    </body>
 </html>

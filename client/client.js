@@ -5,7 +5,7 @@ function add_msg(uid, uname, text, ctime) {
         .append($("<span>").text(`${uname}`).css("color", "red"))
         .append($("<span>").text(`(${uid}) `).css("color", "blue"))
         .append($("<span>").text(`${text}`));
-    $("#messages").append(li);
+    $("#chat").append(li);
 }
 
 function update_room_view(users) {
