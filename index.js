@@ -119,23 +119,23 @@ class User {
 // -----------------------------------------------------------------
 
 // 获得房间（自动创建
-const get_room = (rname) => {
+function get_room(rname) {
     let room = rooms.find((_) => _.rname == rname);
     return room ? room : new Room(rname);
-};
+}
 
 // 获得用户（自动创建
-const get_user = (uid) => {
+function get_user(uid) {
     let user = users.find((_) => _.uid == uid);
     return user ? user : new User(uid);
-};
+}
 
 // 分析房间名
-const get_rname = (url) => {
+function get_rname(url) {
     let reg = new RegExp("https?://.*?/room/(\\w+)");
     let r = url.match(reg);
     return unescape(r[1]);
-};
+}
 
 io.on("connection", (socket) => {
     socket.on("login", (uid) => {

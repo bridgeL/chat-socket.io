@@ -1,4 +1,4 @@
-const add_msg = (uid, uname, text, ctime) => {
+function add_msg(uid, uname, text, ctime) {
     if (!ctime) ctime = new Date().toLocaleString("chinese", { hour12: false });
     let li = $("<li>")
         .append($("<span>").text(`[${ctime}] `).css("color", "green"))
@@ -6,9 +6,9 @@ const add_msg = (uid, uname, text, ctime) => {
         .append($("<span>").text(`(${uid}) `).css("color", "blue"))
         .append($("<span>").text(`${text}`));
     $("#messages").append(li);
-};
+}
 
-const update_room_view = (users) => {
+function update_room_view(users) {
     let room = $("#room");
 
     room.children().remove();
@@ -18,7 +18,7 @@ const update_room_view = (users) => {
             $("<span>").text(`${user.uname}`).css("color", "red")
         ).append($("<span>").text(`(${user.uid}) `).css("color", "blue"));
     });
-};
+}
 
 $(() => {
     // 初始化
