@@ -23,15 +23,6 @@ function update_room_view(rname, users) {
 
     room.children().remove();
 
-    let div = $("<div>");
-
-    users.forEach((user) => {
-        div.append(
-            $("<span>").text(`${user.uname}`).prop("class", "uname")
-        ).append($("<span>").text(`(${user.uid}) `).prop("class", "uid"));
-    });
-    room.append(div);
-
     room.append(
         $("<div>")
             .append($("<span>").text(`[${rname}] `))
@@ -40,7 +31,16 @@ function update_room_view(rname, users) {
                     .text(`online: ${users.length}`)
                     .css("color", "orange")
             )
+            .css("display", "inline-block")
     );
+
+    let div = $("<div>");
+    users.forEach((user) => {
+        div.append(
+            $("<span>").text(`${user.uname}`).prop("class", "uname")
+        ).append($("<span>").text(`(${user.uid}) `).prop("class", "uid"));
+    });
+    room.append(div);
 }
 
 $(() => {
