@@ -119,8 +119,8 @@ class User {
 // -----------------------------------------------------------------
 
 Date.prototype.toFuckingString = function () {
-    let mon = `0${this.getMonth()}`.slice(-2);
-    let day = `0${this.getDay()}`.slice(-2);
+    let mon = `0${this.getMonth() + 1}`.slice(-2);
+    let day = `0${this.getDate()}`.slice(-2);
     let hour = `0${this.getHours()}`.slice(-2);
     let min = `0${this.getMinutes()}`.slice(-2);
     let sec = `0${this.getSeconds()}`.slice(-2);
