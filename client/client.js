@@ -18,16 +18,29 @@ function add_msg(uid, uname, text, ctime) {
     $("#main").prop("scrollTop", $("#main").prop("scrollHeight"));
 }
 
-function update_room_view(users) {
+function update_room_view(rname, users) {
     let room = $("#room");
 
     room.children().remove();
 
+    let div = $("<div>");
+
     users.forEach((user) => {
-        room.append(
+        div.append(
             $("<span>").text(`${user.uname}`).prop("class", "uname")
         ).append($("<span>").text(`(${user.uid}) `).prop("class", "uid"));
     });
+    room.append(div);
+
+    room.append(
+        $("<div>")
+            .append($("<span>").text(`[${rname}] `))
+            .append(
+                $("<span>")
+                    .text(`online: ${users.length}`)
+                    .css("color", "orange")
+            )
+    );
 }
 
 $(() => {
@@ -35,13 +48,23 @@ $(() => {
     let socket = io();
 
     // 登录
-    socket.emit("login", localStorage.getItem("uid"));
+    let uid = localStorage.getItem("uid");
+    let rname = (function get_rname() {
+        let reg = new RegExp("https?://.*?/room/(.*)");
+        let r = window.location.href.match(reg);
+        return unescape(r[1]);
+    })();
+
+    console.log(rname);
+
+    // 分析房间名
+    if (rname) socket.emit("login", uid, rname);
 
     // 登录成功，同步用户信息，房间信息
     socket.on("init", (uid, uname, users, history) => {
         let user = { uid: uid, uname: uname };
         console.log(user);
-        update_room_view(users);
+        update_room_view(rname, users);
         history.forEach((_) => {
             add_msg(_.uid, _.uname, _.text, _.ctime);
         });
@@ -59,7 +82,7 @@ $(() => {
             let u = users.find((_) => _.uid == user.uid);
             if (u) u.uname = uname;
 
-            update_room_view(users);
+            update_room_view(rname, users);
 
             socket.emit("name-change", uname);
         });
@@ -74,7 +97,7 @@ $(() => {
             let u = users.find((_) => _.uid == uid);
             if (u) u.uname = uname;
 
-            update_room_view(users);
+            update_room_view(rname, users);
         });
 
         socket.on("room-join", (uid, uname) => {
@@ -84,7 +107,7 @@ $(() => {
             };
             users.push(_user);
             add_msg(uid, uname, "join");
-            update_room_view(users);
+            update_room_view(rname, users);
         });
 
         socket.on("room-leave", (uid, uname) => {
@@ -96,7 +119,7 @@ $(() => {
             if (i < 0) return;
             users.splice(i, 1);
             add_msg(uid, uname, "leave");
-            update_room_view(users);
+            update_room_view(rname, users);
         });
 
         // 发消息

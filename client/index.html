@@ -30,6 +30,37 @@
                 overflow: auto;
             }
 
+            #room {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #chat {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            li > .ctime {
+                color: green;
+            }
+
+            .uname {
+                color: red;
+            }
+
+            .uid {
+                color: blue;
+            }
+
+            li > .text {
+                display: inline-block;
+            }
+
+            li:nth-child(odd) {
+                background: #eee;
+            }
+
             form {
                 background: #eee;
                 height: 20%;
@@ -58,32 +89,6 @@
 
             form button {
                 display: none;
-            }
-
-            #chat {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            li > .ctime {
-                color: green;
-            }
-
-            .uname {
-                color: red;
-            }
-
-            .uid {
-                color: blue;
-            }
-
-            li > .text {
-                display: inline-block;
-            }
-
-            li:nth-child(odd) {
-                background: #eee;
             }
         </style>
     </head>

@@ -7,17 +7,18 @@ let io = require("socket.io")(http);
 // -----------------------------------------------------------------
 
 app.get("/", (req, res) => {
-    res.redirect("room/demo");
+    res.redirect("/room/demo");
 });
 
 app.get("/room", (req, res) => {
-    res.redirect("demo");
+    res.redirect("/room/demo");
 });
 
 app.get("/room/:rname", (req, res) => {
-    let rname = req.params["rname"];
-    if (rname[0] == "@") res.redirect("room/demo");
-    else res.sendFile(__dirname + "/client/index.html");
+    // let rname = req.params["rname"];
+    // if (rname[0] == "@") res.redirect("/room/demo");
+    // else
+    res.sendFile(__dirname + "/client/index.html");
 });
 
 app.get("/client/:fname", (req, res) => {
@@ -139,17 +140,9 @@ function get_user(uid) {
     return user ? user : new User(uid);
 }
 
-// 分析房间名
-function get_rname(url) {
-    let reg = new RegExp("https?://.*?/room/(\\w+)");
-    let r = url.match(reg);
-    return unescape(r[1]);
-}
-
 io.on("connection", (socket) => {
-    socket.on("login", (uid) => {
+    socket.on("login", (uid, rname) => {
         let user = get_user(uid);
-        let rname = get_rname(socket.handshake.headers.referer);
         let room = get_room(rname);
 
         socket.emit(
