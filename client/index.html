@@ -11,6 +11,7 @@
         <style>
             body {
                 font: 1.5em consolas, Arial;
+                --main-bg-color: #eee;
             }
 
             #window {
@@ -19,7 +20,7 @@
                 left: 50%;
                 width: 90%;
                 transform: translateX(-50%);
-                border: 0.1em solid black;
+                border: 0.4em solid var(--main-bg-color);
                 border-radius: 0.5em;
                 height: 80%;
                 overflow: auto;
@@ -59,22 +60,26 @@
             }
 
             li:nth-child(odd) {
-                background: #eee;
+                background: var(--main-bg-color);
             }
 
             form {
-                background: #eee;
-                height: 20%;
+                background: var(--main-bg-color);
                 display: flex;
                 align-items: center;
                 flex-wrap: nowrap;
                 overflow: auto;
+                gap: 0.4em;
+                padding-top: 0.4em;
+                height: calc(20% - 0.4em);
             }
 
             form > * {
-                height: 80%;
+                height: 90%;
                 font-size: 1em;
-                margin: 0 0.2em;
+            }
+
+            input {
                 border: 0;
             }
 
