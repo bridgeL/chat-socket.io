@@ -50,9 +50,10 @@ $(() => {
     // 登录
     let uid = localStorage.getItem("uid");
     let rname = (function get_rname() {
+        let url = decodeURI(window.location.href);
         let reg = new RegExp("https?://.*?/room/(.*)");
-        let r = window.location.href.match(reg);
-        return unescape(r[1]);
+        let r = url.match(reg);
+        return r[1];
     })();
 
     console.log(rname);
