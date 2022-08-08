@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/room", (req, res) => {
-    res.redirect("room/demo");
+    res.redirect("demo");
 });
 
 app.get("/room/:rname", (req, res) => {
