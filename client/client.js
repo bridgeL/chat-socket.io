@@ -1,11 +1,21 @@
+Date.prototype.toFuckingString = function () {
+    let mon = `0${this.getMonth()}`.slice(-2);
+    let day = `0${this.getDay()}`.slice(-2);
+    let hour = `0${this.getHours()}`.slice(-2);
+    let min = `0${this.getMinutes()}`.slice(-2);
+    let sec = `0${this.getSeconds()}`.slice(-2);
+    return `${this.getFullYear()}-${mon}-${day} ${hour}:${min}:${sec}`;
+};
+
 function add_msg(uid, uname, text, ctime) {
-    if (!ctime) ctime = new Date().toLocaleString("chinese", { hour12: false });
+    if (!ctime) ctime = new Date().toFuckingString();
     let li = $("<li>")
-        .append($("<span>").text(`[${ctime}] `).css("color", "green"))
-        .append($("<span>").text(`${uname}`).css("color", "red"))
-        .append($("<span>").text(`(${uid}) `).css("color", "blue"))
-        .append($("<span>").text(`${text}`));
+        .append($("<span>").text(`[${ctime}] `).prop("class", "ctime"))
+        .append($("<span>").text(`${uname}`).prop("class", "uname"))
+        .append($("<span>").text(`(${uid}) `).prop("class", "uid"))
+        .append($("<span>").text(`${text}`).prop("class", "text"));
     $("#chat").append(li);
+    $("#main").prop("scrollTop", $("#main").prop("scrollHeight"));
 }
 
 function update_room_view(users) {
@@ -15,8 +25,8 @@ function update_room_view(users) {
 
     users.forEach((user) => {
         room.append(
-            $("<span>").text(`${user.uname}`).css("color", "red")
-        ).append($("<span>").text(`(${user.uid}) `).css("color", "blue"));
+            $("<span>").text(`${user.uname}`).prop("class", "uname")
+        ).append($("<span>").text(`(${user.uid}) `).prop("class", "uid"));
     });
 }
 

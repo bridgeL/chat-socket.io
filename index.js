@@ -118,6 +118,15 @@ class User {
 // function
 // -----------------------------------------------------------------
 
+Date.prototype.toFuckingString = function () {
+    let mon = `0${this.getMonth()}`.slice(-2);
+    let day = `0${this.getDay()}`.slice(-2);
+    let hour = `0${this.getHours()}`.slice(-2);
+    let min = `0${this.getMinutes()}`.slice(-2);
+    let sec = `0${this.getSeconds()}`.slice(-2);
+    return `${this.getFullYear()}-${mon}-${day} ${hour}:${min}:${sec}`;
+};
+
 // 获得房间（自动创建
 function get_room(rname) {
     let room = rooms.find((_) => _.rname == rname);
@@ -170,7 +179,8 @@ io.on("connection", (socket) => {
 
         // 转发消息
         socket.on("chat", (text) => {
-            let ctime = new Date().toLocaleString("chinese", { hour12: false });
+            let ctime = new Date().toFuckingString();
+
             socket.to(rname).emit("chat", user.uid, user.uname, text, ctime);
             room.add_history(user.uid, user.uname, text, ctime);
         });
